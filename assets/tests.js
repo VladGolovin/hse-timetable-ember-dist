@@ -49,6 +49,23 @@ define('ember-app/tests/app.jshint', ['exports'], function (exports) {
     assert.ok(true, 'app.js should pass jshint.');
   });
 });
+define('ember-app/tests/components/hse-timepickr.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - components');
+  test('components/hse-timepickr.js should pass jscs', function () {
+    ok(true, 'components/hse-timepickr.js should pass jscs.');
+  });
+});
+define('ember-app/tests/components/hse-timepickr.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - components/hse-timepickr.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'components/hse-timepickr.js should pass jshint.');
+  });
+});
 define('ember-app/tests/controllers/application.jscs-test', ['exports'], function (exports) {
   'use strict';
 
@@ -207,7 +224,7 @@ define('ember-app/tests/controllers/lesson-l.jscs-test', ['exports'], function (
 
   module('JSCS - controllers');
   test('controllers/lesson-l.js should pass jscs', function () {
-    ok(true, 'controllers/lesson-l.js should pass jscs.');
+    ok(false, 'controllers/lesson-l.js should pass jscs.\nMissing semicolon after statement at controllers/lesson-l.js :\n    18 |      cellComponent.componentProperties = {\n    19 |        readonly: true\n    20 |      }\n---------------^\n    21 |    }     \n    22 |\nIllegal trailing whitespace at controllers/lesson-l.js :\n    19 |        readonly: true\n    20 |      }\n    21 |    }     \n------------------^\n    22 |\n    23 |    return cellComponent;');
   });
 });
 define('ember-app/tests/controllers/lesson-l.jshint', ['exports'], function (exports) {
@@ -216,7 +233,7 @@ define('ember-app/tests/controllers/lesson-l.jshint', ['exports'], function (exp
   QUnit.module('JSHint - controllers/lesson-l.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'controllers/lesson-l.js should pass jshint.');
+    assert.ok(false, 'controllers/lesson-l.js should pass jshint.\ncontrollers/lesson-l.js: line 20, col 8, Missing semicolon.\n\n1 error');
   });
 });
 define('ember-app/tests/controllers/room-e.jscs-test', ['exports'], function (exports) {
@@ -613,6 +630,163 @@ define('ember-app/tests/helpers/validate-properties', ['exports', 'ember', 'embe
   function testInvalidPropertyValues(propertyName, values, context) {
     testPropertyValues(propertyName, values, false, context);
   }
+});
+define('ember-app/tests/integration/components/hse-timepickr-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleForComponent)('hse-timepickr', 'Integration | Component | hse timepickr', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 17
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'hse-timepickr', ['loc', [null, [1, 0], [1, 17]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.4.6',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'hse-timepickr', [], [], 0, null, ['loc', [null, [2, 4], [4, 22]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+});
+define('ember-app/tests/integration/components/hse-timepickr-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - integration/components');
+  test('integration/components/hse-timepickr-test.js should pass jscs', function () {
+    ok(true, 'integration/components/hse-timepickr-test.js should pass jscs.');
+  });
+});
+define('ember-app/tests/integration/components/hse-timepickr-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/hse-timepickr-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/hse-timepickr-test.js should pass jshint.');
+  });
 });
 define('ember-app/tests/locales/en/forms/discipline-e.jscs-test', ['exports'], function (exports) {
   'use strict';
@@ -1877,7 +2051,7 @@ define('ember-app/tests/router.jscs-test', ['exports'], function (exports) {
 
   module('JSCS - .');
   test('router.js should pass jscs', function () {
-    ok(false, 'router.js should pass jscs.\nInvalid line break at router.js :\n     1 |import Ember from \'ember\';\n----------------------------------^\n     2 |import config from \'./config/environment\';\n     3 |\nIllegal trailing whitespace at router.js :\n    19 |  { path: \'discipline-e/:id\' });\n    20 |  this.route(\'discipline-e.new\',\n    21 |  { path: \'discipline-e/new\' });  \n------------------------------------------^\n    22 |\n    23 |  // Группы студентов');
+    ok(false, 'router.js should pass jscs.\nIllegal trailing whitespace at router.js :\n    19 |  { path: \'discipline-e/:id\' });\n    20 |  this.route(\'discipline-e.new\',\n    21 |  { path: \'discipline-e/new\' });  \n------------------------------------------^\n    22 |\n    23 |  // Группы студентов');
   });
 });
 define('ember-app/tests/router.jshint', ['exports'], function (exports) {
@@ -3693,6 +3867,50 @@ define('ember-app/tests/unit/serializers/teacher-test.jshint', ['exports'], func
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/serializers/teacher-test.js should pass jshint.');
+  });
+});
+define('ember-app/tests/unit/utils/float-to-time-test', ['exports', 'ember-app/utils/float-to-time', 'qunit'], function (exports, _emberAppUtilsFloatToTime, _qunit) {
+
+  (0, _qunit.module)('Unit | Utility | float to time');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var result = (0, _emberAppUtilsFloatToTime['default'])();
+    assert.ok(result);
+  });
+});
+define('ember-app/tests/unit/utils/float-to-time-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/float-to-time-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/float-to-time-test.js should pass jscs.');
+  });
+});
+define('ember-app/tests/unit/utils/float-to-time-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/float-to-time-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/float-to-time-test.js should pass jshint.');
+  });
+});
+define('ember-app/tests/utils/float-to-time.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - utils');
+  test('utils/float-to-time.js should pass jscs', function () {
+    ok(false, 'utils/float-to-time.js should pass jscs.\nIllegal trailing whitespace at utils/float-to-time.js :\n    10 |\n    11 |    valueString = value < 10 ? `0${valueString}` : valueString;\n    12 |    \n------------^\n    13 |    if (valueString.contains(\'.\') && valueString.split(\'.\')[1].length == 1) {\n    14 |      valueString = `${valueString}0`;');
+  });
+});
+define('ember-app/tests/utils/float-to-time.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - utils/float-to-time.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'utils/float-to-time.js should pass jshint.\nutils/float-to-time.js: line 13, col 73, Expected \'===\' and instead saw \'==\'.\n\n1 error');
   });
 });
 /* jshint ignore:start */

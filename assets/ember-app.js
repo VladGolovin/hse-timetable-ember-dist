@@ -254,6 +254,69 @@ define('ember-app/components/form-load-time-tracker', ['exports', 'ember-flexber
 define('ember-app/components/groupedit-toolbar', ['exports', 'ember-flexberry/components/groupedit-toolbar'], function (exports, _emberFlexberryComponentsGroupeditToolbar) {
   exports['default'] = _emberFlexberryComponentsGroupeditToolbar['default'];
 });
+define('ember-app/components/hse-timepickr', ['exports', 'ember'], function (exports, _ember) {
+  var observer = _ember['default'].observer;
+  var isNone = _ember['default'].isNone;
+  exports['default'] = _ember['default'].Component.extend({
+
+    /**
+     * Значение редактируемого объекта данных
+     * @property {Number} value
+     */
+    value: null,
+
+    readonly: false,
+
+    /**
+     * Значение с которым работает 'flatpickr'
+     * @property {Number} _value
+     */
+    _value: '8:00',
+
+    classNames: ['flexberry-field', 'ui', 'field'],
+
+    valueObserver: observer('_value', function () {
+      this.set('value', this.get('_value').replace(':', '.'));
+    }),
+
+    init: function init() {
+      this._super.apply(this, arguments);
+
+      var value = this.get('value');
+
+      var valueString = undefined;
+
+      if (!isNone(value)) {
+        valueString = value.toString();
+
+        valueString = value < 10 ? '0' + valueString : valueString;
+
+        if (valueString.contains('.') && valueString.split('.')[1].length === 1) {
+          valueString = valueString + '0';
+
+          valueString = valueString.replace('.', ':');
+        }
+      } else {
+        valueString = '08:00';
+      }
+
+      this.set('_value', valueString);
+    },
+
+    didInsertElement: function didInsertElement() {
+      this._super.apply(this, arguments);
+
+      if (!this.get('readonly')) {
+        this.$('input').flatpickr({
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: 'H:i',
+          time_24hr: true
+        });
+      }
+    }
+  });
+});
 define('ember-app/components/mobile/flexberry-file', ['exports', 'ember-flexberry/components/mobile/flexberry-file'], function (exports, _emberFlexberryComponentsMobileFlexberryFile) {
   exports['default'] = _emberFlexberryComponentsMobileFlexberryFile['default'];
 });
@@ -605,7 +668,20 @@ define('ember-app/controllers/lesson-l', ['exports', 'ember-flexberry/controller
       @type String
       @default 'lesson-e'
      */
-    editFormRoute: 'lesson-e'
+    editFormRoute: 'lesson-e',
+
+    getCellComponent: function getCellComponent(attr, bindingPath) {
+      var cellComponent = this._super.apply(this, arguments);
+
+      if (bindingPath === 'beginning' || bindingPath === 'ending') {
+        cellComponent.componentName = 'hse-timepickr';
+        cellComponent.componentProperties = {
+          readonly: true
+        };
+      }
+
+      return cellComponent;
+    }
   });
 });
 define('ember-app/controllers/list-form', ['exports', 'ember-flexberry/controllers/list-form'], function (exports, _emberFlexberryControllersListForm) {
@@ -11639,6 +11715,184 @@ define("ember-app/templates/components/groupedit-toolbar", ["exports"], function
     };
   })());
 });
+define("ember-app/templates/components/hse-timepickr", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 3,
+              "column": 0
+            }
+          },
+          "moduleName": "ember-app/templates/components/hse-timepickr.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 0, 0);
+          return morphs;
+        },
+        statements: [["content", "label", ["loc", [null, [2, 7], [2, 16]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child1 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 5,
+              "column": 0
+            },
+            "end": {
+              "line": 14,
+              "column": 2
+            }
+          },
+          "moduleName": "ember-app/templates/components/hse-timepickr.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [["inline", "input", [], ["type", ["subexpr", "@mut", [["get", "type", ["loc", [null, [7, 11], [7, 15]]]]], [], []], "value", ["subexpr", "get", [["get", "this", ["loc", [null, [8, 17], [8, 21]]]], "_value"], [], ["loc", [null, [8, 12], [8, 31]]]], "readonly", "readonly", "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [10, 15], [10, 23]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [11, 18], [11, 29]]]]], [], []], "maxlength", ["subexpr", "@mut", [["get", "maxlength", ["loc", [null, [12, 16], [12, 25]]]]], [], []]], ["loc", [null, [6, 2], [13, 6]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child2 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 14,
+              "column": 2
+            },
+            "end": {
+              "line": 22,
+              "column": 2
+            }
+          },
+          "moduleName": "ember-app/templates/components/hse-timepickr.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [["inline", "input", [], ["type", ["subexpr", "@mut", [["get", "type", ["loc", [null, [16, 11], [16, 15]]]]], [], []], "value", ["subexpr", "@mut", [["get", "_value", ["loc", [null, [17, 12], [17, 18]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [18, 15], [18, 23]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [19, 18], [19, 29]]]]], [], []], "maxlength", ["subexpr", "@mut", [["get", "maxlength", ["loc", [null, [20, 16], [20, 25]]]]], [], []]], ["loc", [null, [15, 4], [21, 6]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type", "multiple-nodes"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 23,
+            "column": 6
+          }
+        },
+        "moduleName": "ember-app/templates/components/hse-timepickr.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "ui input flexberry-textbox");
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [["block", "if", [["get", "label", ["loc", [null, [1, 6], [1, 11]]]]], [], 0, null, ["loc", [null, [1, 0], [3, 7]]]], ["block", "if", [["get", "readonly", ["loc", [null, [5, 6], [5, 14]]]]], [], 1, 2, ["loc", [null, [5, 0], [22, 9]]]]],
+      locals: [],
+      templates: [child0, child1, child2]
+    };
+  })());
+});
 define("ember-app/templates/components/modal-dialog", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
     var child0 = (function () {
@@ -20276,7 +20530,7 @@ define("ember-app/templates/lesson-e", ["exports"], function (exports) {
         morphs[21] = dom.createMorphAt(element10, 5, 5);
         return morphs;
       },
-      statements: [["inline", "t", ["forms.lesson-e.caption"], [], ["loc", [null, [1, 22], [1, 52]]]], ["inline", "flexberry-error", [], ["error", ["subexpr", "@mut", [["get", "error", ["loc", [null, [4, 26], [4, 31]]]]], [], []]], ["loc", [null, [4, 2], [4, 33]]]], ["inline", "flexberry-validationsummary", [], ["errors", ["subexpr", "@mut", [["get", "model.errors", ["loc", [null, [7, 43], [7, 55]]]]], [], []]], ["loc", [null, [7, 6], [7, 57]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [12, 16], [12, 24]]]]], [], 0, null, ["loc", [null, [12, 6], [21, 17]]]], ["element", "action", ["close"], [], ["loc", [null, [22, 59], [22, 77]]]], ["inline", "t", ["forms.edit-form.close-button-text"], [], ["loc", [null, [23, 8], [23, 49]]]], ["inline", "flexberry-field", [], ["placeholder", ["subexpr", "t", ["components.flexberry-field.placeholder"], [], ["loc", [null, [30, 16], [30, 60]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [31, 13], [31, 21]]]]], [], []], "required", true, "value", ["subexpr", "@mut", [["get", "model.beginning", ["loc", [null, [33, 10], [33, 25]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.beginning", ["loc", [null, [34, 14], [34, 36]]]], "error", ""], [], ["loc", [null, [34, 10], [34, 48]]]], "label", ["subexpr", "t", ["forms.lesson-e.beginning-caption"], [], ["loc", [null, [35, 10], [35, 48]]]]], ["loc", [null, [28, 2], [36, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.beginning", ["loc", [null, [37, 38], [37, 60]]]]], [], []], "pointing", "pointing"], ["loc", [null, [37, 2], [37, 82]]]], ["inline", "flexberry-field", [], ["placeholder", ["subexpr", "t", ["components.flexberry-field.placeholder"], [], ["loc", [null, [43, 16], [43, 60]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [44, 13], [44, 21]]]]], [], []], "required", true, "value", ["subexpr", "@mut", [["get", "model.ending", ["loc", [null, [46, 10], [46, 22]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.ending", ["loc", [null, [47, 14], [47, 33]]]], "error", ""], [], ["loc", [null, [47, 10], [47, 45]]]], "label", ["subexpr", "t", ["forms.lesson-e.ending-caption"], [], ["loc", [null, [48, 10], [48, 45]]]]], ["loc", [null, [41, 2], [49, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.ending", ["loc", [null, [50, 38], [50, 57]]]]], [], []], "pointing", "pointing"], ["loc", [null, [50, 2], [50, 79]]]], ["inline", "t", ["forms.lesson-e.date-caption"], [], ["loc", [null, [54, 9], [54, 44]]]], ["inline", "flexberry-datepicker", [], ["placeholder", ["subexpr", "t", ["components.flexberry-datepicker.placeholder"], [], ["loc", [null, [57, 16], [57, 65]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [58, 13], [58, 21]]]]], [], []], "value", ["subexpr", "@mut", [["get", "model.date", ["loc", [null, [59, 10], [59, 20]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.date", ["loc", [null, [60, 14], [60, 31]]]], "error", ""], [], ["loc", [null, [60, 10], [60, 43]]]]], ["loc", [null, [55, 2], [61, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.date", ["loc", [null, [62, 38], [62, 55]]]]], [], []], "pointing", "pointing"], ["loc", [null, [62, 2], [62, 77]]]], ["inline", "t", ["forms.lesson-e.studentGroup-caption"], [], ["loc", [null, [66, 9], [66, 52]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.studentGroup", ["loc", [null, [71, 10], [71, 28]]]]], [], []], "displayAttributeName", "name", "autocomplete", true, "relationName", "studentGroup", "projection", "StudentGroupL", "title", ["subexpr", "t", ["forms.lesson-e.studentGroup-caption"], [], ["loc", [null, [76, 10], [76, 51]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [77, 13], [77, 21]]]]], [], []]], ["loc", [null, [67, 2], [78, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.studentGroup", ["loc", [null, [79, 38], [79, 63]]]]], [], []], "pointing", "pointing"], ["loc", [null, [79, 2], [79, 85]]]], ["inline", "t", ["forms.lesson-e.discipline-caption"], [], ["loc", [null, [83, 9], [83, 50]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.discipline", ["loc", [null, [88, 10], [88, 26]]]]], [], []], "displayAttributeName", "name", "autocomplete", true, "relationName", "discipline", "projection", "DisciplineL", "title", ["subexpr", "t", ["forms.lesson-e.discipline-caption"], [], ["loc", [null, [93, 10], [93, 49]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [94, 13], [94, 21]]]]], [], []]], ["loc", [null, [84, 2], [95, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.discipline", ["loc", [null, [96, 38], [96, 61]]]]], [], []], "pointing", "pointing"], ["loc", [null, [96, 2], [96, 83]]]], ["inline", "t", ["forms.lesson-e.room-caption"], [], ["loc", [null, [100, 9], [100, 44]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.room", ["loc", [null, [105, 10], [105, 20]]]]], [], []], "displayAttributeName", "number", "autocomplete", true, "relationName", "room", "projection", "RoomL", "title", ["subexpr", "t", ["forms.lesson-e.room-caption"], [], ["loc", [null, [110, 10], [110, 43]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [111, 13], [111, 21]]]]], [], []]], ["loc", [null, [101, 2], [112, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.room", ["loc", [null, [113, 38], [113, 55]]]]], [], []], "pointing", "pointing"], ["loc", [null, [113, 2], [113, 77]]]]],
+      statements: [["inline", "t", ["forms.lesson-e.caption"], [], ["loc", [null, [1, 22], [1, 52]]]], ["inline", "flexberry-error", [], ["error", ["subexpr", "@mut", [["get", "error", ["loc", [null, [4, 26], [4, 31]]]]], [], []]], ["loc", [null, [4, 2], [4, 33]]]], ["inline", "flexberry-validationsummary", [], ["errors", ["subexpr", "@mut", [["get", "model.errors", ["loc", [null, [7, 43], [7, 55]]]]], [], []]], ["loc", [null, [7, 6], [7, 57]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [12, 16], [12, 24]]]]], [], 0, null, ["loc", [null, [12, 6], [21, 17]]]], ["element", "action", ["close"], [], ["loc", [null, [22, 59], [22, 77]]]], ["inline", "t", ["forms.edit-form.close-button-text"], [], ["loc", [null, [23, 8], [23, 49]]]], ["inline", "hse-timepickr", [], ["placeholder", ["subexpr", "t", ["components.flexberry-field.placeholder"], [], ["loc", [null, [30, 16], [30, 60]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [31, 13], [31, 21]]]]], [], []], "required", true, "value", ["subexpr", "@mut", [["get", "model.beginning", ["loc", [null, [33, 10], [33, 25]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.beginning", ["loc", [null, [34, 14], [34, 36]]]], "error", ""], [], ["loc", [null, [34, 10], [34, 48]]]], "label", ["subexpr", "t", ["forms.lesson-e.beginning-caption"], [], ["loc", [null, [35, 10], [35, 48]]]]], ["loc", [null, [28, 2], [36, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.beginning", ["loc", [null, [37, 38], [37, 60]]]]], [], []], "pointing", "pointing"], ["loc", [null, [37, 2], [37, 82]]]], ["inline", "hse-timepickr", [], ["placeholder", ["subexpr", "t", ["components.flexberry-field.placeholder"], [], ["loc", [null, [43, 16], [43, 60]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [44, 13], [44, 21]]]]], [], []], "required", true, "value", ["subexpr", "@mut", [["get", "model.ending", ["loc", [null, [46, 10], [46, 22]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.beginning", ["loc", [null, [47, 14], [47, 36]]]], "error", ""], [], ["loc", [null, [47, 10], [47, 48]]]], "label", ["subexpr", "t", ["forms.lesson-e.beginning-caption"], [], ["loc", [null, [48, 10], [48, 48]]]]], ["loc", [null, [41, 2], [49, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.ending", ["loc", [null, [50, 38], [50, 57]]]]], [], []], "pointing", "pointing"], ["loc", [null, [50, 2], [50, 79]]]], ["inline", "t", ["forms.lesson-e.date-caption"], [], ["loc", [null, [54, 9], [54, 44]]]], ["inline", "flexberry-datepicker", [], ["placeholder", ["subexpr", "t", ["components.flexberry-datepicker.placeholder"], [], ["loc", [null, [57, 16], [57, 65]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [58, 13], [58, 21]]]]], [], []], "value", ["subexpr", "@mut", [["get", "model.date", ["loc", [null, [59, 10], [59, 20]]]]], [], []], "class", ["subexpr", "if", [["get", "model.errors.date", ["loc", [null, [60, 14], [60, 31]]]], "error", ""], [], ["loc", [null, [60, 10], [60, 43]]]]], ["loc", [null, [55, 2], [61, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.date", ["loc", [null, [62, 38], [62, 55]]]]], [], []], "pointing", "pointing"], ["loc", [null, [62, 2], [62, 77]]]], ["inline", "t", ["forms.lesson-e.studentGroup-caption"], [], ["loc", [null, [66, 9], [66, 52]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.studentGroup", ["loc", [null, [71, 10], [71, 28]]]]], [], []], "displayAttributeName", "name", "autocomplete", true, "relationName", "studentGroup", "projection", "StudentGroupL", "title", ["subexpr", "t", ["forms.lesson-e.studentGroup-caption"], [], ["loc", [null, [76, 10], [76, 51]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [77, 13], [77, 21]]]]], [], []]], ["loc", [null, [67, 2], [78, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.studentGroup", ["loc", [null, [79, 38], [79, 63]]]]], [], []], "pointing", "pointing"], ["loc", [null, [79, 2], [79, 85]]]], ["inline", "t", ["forms.lesson-e.discipline-caption"], [], ["loc", [null, [83, 9], [83, 50]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.discipline", ["loc", [null, [88, 10], [88, 26]]]]], [], []], "displayAttributeName", "name", "autocomplete", true, "relationName", "discipline", "projection", "DisciplineL", "title", ["subexpr", "t", ["forms.lesson-e.discipline-caption"], [], ["loc", [null, [93, 10], [93, 49]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [94, 13], [94, 21]]]]], [], []]], ["loc", [null, [84, 2], [95, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.discipline", ["loc", [null, [96, 38], [96, 61]]]]], [], []], "pointing", "pointing"], ["loc", [null, [96, 2], [96, 83]]]], ["inline", "t", ["forms.lesson-e.room-caption"], [], ["loc", [null, [100, 9], [100, 44]]]], ["inline", "flexberry-lookup", [], ["choose", "showLookupDialog", "remove", "removeLookupValue", "value", ["subexpr", "@mut", [["get", "model.room", ["loc", [null, [105, 10], [105, 20]]]]], [], []], "displayAttributeName", "number", "autocomplete", true, "relationName", "room", "projection", "RoomL", "title", ["subexpr", "t", ["forms.lesson-e.room-caption"], [], ["loc", [null, [110, 10], [110, 43]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [111, 13], [111, 21]]]]], [], []]], ["loc", [null, [101, 2], [112, 4]]]], ["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "@mut", [["get", "model.errors.room", ["loc", [null, [113, 38], [113, 55]]]]], [], []], "pointing", "pointing"], ["loc", [null, [113, 2], [113, 77]]]]],
       locals: [],
       templates: [child0]
     };
@@ -25673,6 +25927,30 @@ define('ember-app/utils/deserialize-sorting-param', ['exports', 'ember-flexberry
     }
   });
 });
+define('ember-app/utils/float-to-time', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = floatToTime;
+  var isNone = _ember['default'].isNone;
+
+  function floatToTime(value) {
+    var valueString = undefined;
+
+    if (!isNone(value)) {
+      valueString = value.toString();
+
+      valueString = value < 10 ? '0' + valueString : valueString;
+
+      if (valueString.contains('.') && valueString.split('.')[1].length == 1) {
+        valueString = valueString + '0';
+
+        valueString = valueString.replace('.', ':');
+      }
+    } else {
+      valueString = '00:00';
+    }
+
+    return true;
+  }
+});
 define('ember-app/utils/get-current-agregator', ['exports', 'ember-flexberry/utils/get-current-agregator'], function (exports, _emberFlexberryUtilsGetCurrentAgregator) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -25748,7 +26026,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("ember-app/app")["default"].create({"name":"ember-app","backendUrl":"https://hse-timetable-api.azurewebsites.net","backendUrls":{"root":"https://hse-timetable-api.azurewebsites.net","api":"https://hse-timetable-api.azurewebsites.net/odata"},"log":{"enabled":true,"storeErrorMessages":true,"storeWarnMessages":false,"storeLogMessages":true,"storeInfoMessages":false,"storeDebugMessages":false,"storeDeprecationMessages":false,"storePromiseErrors":true,"showPromiseErrors":true},"perf":{"enabled":false},"lock":{"enabled":true,"openReadOnly":true,"unlockObject":true},"useUserSettingsService":true,"offline":{"dbName":"ember-app","offlineEnabled":true,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"components":{"flexberryFile":{"uploadUrl":"https://hse-timetable-api.azurewebsites.net/api/File","maxUploadFileSize":null,"uploadOnModelPreSave":true,"showUploadButton":true,"showModalDialogOnUploadError":true,"showModalDialogOnDownloadError":true}},"version":"0.0.0+8e053457"});
+  require("ember-app/app")["default"].create({"name":"ember-app","backendUrl":"https://hse-timetable-api.azurewebsites.net","backendUrls":{"root":"https://hse-timetable-api.azurewebsites.net","api":"https://hse-timetable-api.azurewebsites.net/odata"},"log":{"enabled":true,"storeErrorMessages":true,"storeWarnMessages":false,"storeLogMessages":true,"storeInfoMessages":false,"storeDebugMessages":false,"storeDeprecationMessages":false,"storePromiseErrors":true,"showPromiseErrors":true},"perf":{"enabled":false},"lock":{"enabled":true,"openReadOnly":true,"unlockObject":true},"useUserSettingsService":true,"offline":{"dbName":"ember-app","offlineEnabled":true,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"components":{"flexberryFile":{"uploadUrl":"https://hse-timetable-api.azurewebsites.net/api/File","maxUploadFileSize":null,"uploadOnModelPreSave":true,"showUploadButton":true,"showModalDialogOnUploadError":true,"showModalDialogOnDownloadError":true}},"version":"0.0.0+3d1aba35"});
 }
 
 /* jshint ignore:end */
